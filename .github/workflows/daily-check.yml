@@ -30,7 +30,7 @@ jobs:
       
       # obtain schedule json from cache
       - name: Check schedule cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: home_games_schedule.json
           key: schedule-cache
