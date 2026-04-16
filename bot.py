@@ -230,19 +230,19 @@ def build_webhook_payload(game_info):
             'name': "Final Score",
             'value': f"**{home_team}** {home_score} - {away_score} **{away_team}**\nWinner: **{winning_team}**\n_ _"
         }
-        promo_field = {
-            'name': "What is the promo?",
-            'value': "This is a [collab](https://www.pandaexpress.com/promo/dodgerswin) between Panda Express and the LA Dodgers, get the Panda Express mobile app to use the promo code\nIf you want to join in on the big backtivites get someone to give you the role for ping\n_ _"
-        }
-        website_field = {
-            'name': ":globe_with_meridians:",
-            'value': "Check out this unaffiliated but cool [website](https://www.ispandasix.com/) for upcoming games"
-        }
+        #promo_field = {
+        #    'name': "What is the promo?",
+        #    'value': "This is a [collab](https://www.pandaexpress.com/promo/dodgerswin) between Panda Express and the LA Dodgers, get the Panda Express mobile app to use the promo code\nIf you want to join in on the big backtivites get someone to give you the role for ping\n_ _"
+        #}
+        #website_field = {
+        #    'name': ":globe_with_meridians:",
+        #    'value': "Check out this unaffiliated but cool [website](https://www.ispandasix.com/) for upcoming games"
+        #}
 
         # different messages on win/loss
         if home_win:
             payload = {
-                'content': f"The {home_team} WON yesterday :tada: {role_ping}come get your $6 plate :fortune_cookie:\n\nUse code: **DODGERSWIN**",
+                'content': f"The {home_team} WON yesterday :tada: {role_ping}come get your ~~$6~~ $7 plate :fortune_cookie:\n\nUse code: **DODGERSWIN**",
                 'embeds': [
                     {
                         'title': embed_title,
@@ -250,8 +250,8 @@ def build_webhook_payload(game_info):
                         'color': embed_color,
                         'fields': [
                             score_field,
-                            promo_field,
-                            website_field
+                            #promo_field,
+                            #website_field
                         ]
                     }
                 ]
@@ -266,7 +266,7 @@ def build_webhook_payload(game_info):
                         'color': embed_color,
                         'fields': [
                             score_field,
-                            website_field
+                            #website_field
                         ]
                     }
                 ]
