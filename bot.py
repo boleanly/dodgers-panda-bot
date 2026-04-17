@@ -251,7 +251,7 @@ def build_webhook_payload(game_info):
         else:
             next_game_field = {
                 'name': "Next Game?",
-                'value': "No more home games found in this season.\n_ _"
+                'value': "No more home games found in this season."
             }
         #promo_field = {
         #    'name': "What is the promo?",
@@ -265,7 +265,7 @@ def build_webhook_payload(game_info):
         # different messages on win/loss
         if home_win:
             payload = {
-                'content': f"The {home_team} WON yesterday :tada: {role_ping}come get your ~~$6~~ $7 plate :fortune_cookie:\n\nUse code: **DODGERSWIN**",
+                'content': f"The {home_team} WON yesterday :tada: {role_ping}come get your ~~$5~~ ~~$6~~ $7 plate :fortune_cookie:\n\nUse code: **DODGERSWIN**",
                 'embeds': [
                     {
                         'title': embed_title,
