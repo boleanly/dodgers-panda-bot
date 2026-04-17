@@ -5,8 +5,9 @@ import statsapi
 import json
 import os
 import logging
-from datetime import datetime, timedelta, timezone
-
+from datetime import datetime, timedelta
+from pytz import timezone
+import pytz
 
 # configure logging
 logging.basicConfig(
@@ -35,7 +36,6 @@ DODGERS_TEAM = {
     'name': "Los Angeles Dodgers",  
     'id': 119
 }
-
 
 # fetch team schedule for current year from MLB API
 # IMPORTANT: only stores schedule of home games for the team
@@ -346,7 +346,7 @@ async def send_webhook():
 async def main(test_date=None):
     try:
         logger.info("Daily Dodgers game check process starting...")
-        target_date = test_date if test_date else (datetime.now(timezone(timedelta(hours=-7))) - timedelta(days=1)).strftime("%Y-%m-%d")
+        target_date = test_date if test_date else (datetime.now(timezone('US/Pacific')) - timedelta(days=1)).strftime("%Y-%m-%d")
         build_webhook_payload(get_game_details(DODGERS_TEAM, target_date))
         await send_webhook()
     except Exception as e:
