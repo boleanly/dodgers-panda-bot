@@ -5,7 +5,7 @@ import statsapi
 import json
 import os
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 
 # configure logging
@@ -346,7 +346,7 @@ async def send_webhook():
 async def main(test_date=None):
     try:
         logger.info("Daily Dodgers game check process starting...")
-        target_date = test_date if test_date else (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+        target_date = test_date if test_date else (datetime.now(timezone(timedelta(hours=-7))) - timedelta(days=1)).strftime("%Y-%m-%d")
         build_webhook_payload(get_game_details(DODGERS_TEAM, target_date))
         await send_webhook()
     except Exception as e:
