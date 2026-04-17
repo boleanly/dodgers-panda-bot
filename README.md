@@ -1,4 +1,4 @@
-# $6 Panda Express Bot
+# $7 Panda Express Bot
 
 A simple Discord bot that supports your Panda Express addiction and notifies you when their [Dodgers discount](https://www.pandaexpress.com/promo/dodgerswin) is usable
 
