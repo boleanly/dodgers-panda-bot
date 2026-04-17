@@ -69,7 +69,7 @@ def get_team_schedule(team):
         team_home_games = []
         for game in team_games:
             try:
-                if game.get('home_id') == team['id'] and game.get('game_date'):
+                if game.get('home_id') == team['id'] and game.get('game_date'):                
                     team_home_games.append({
                         'game_id': game.get('game_id'),
                         'game_date': game.get('game_date'),
@@ -81,7 +81,8 @@ def get_team_schedule(team):
                         'status': game.get('status'),
                         'home_score': None,
                         'away_score': None,
-                        'winning_team': None
+                        'winning_team': None,
+                        'next_game_date':None
                     })
             except (KeyError, TypeError) as e:
                 logger.warning(f"Invalid game data structure: {e}")
@@ -91,6 +92,13 @@ def get_team_schedule(team):
         if not team_home_games:
             logger.warning(f"No home games found for {team['name']} in {season}")
             return []
+
+        # sort and store next home game
+        team_home_games.sort(key=lambda game: datetime.fromisoformat(game['game_date']))
+        for n in range(len(team_home_games) - 1):
+            game = team_home_games[n]
+            next_game = team_home_games[n+1]
+            game['next_game_date'] = next_game.get('game_date')
         
         # store the schedule in a json file
         schedule_data = {
@@ -163,6 +171,7 @@ def get_game_details(team, target_date):
                     except Exception:
                         pass
 
+                # if missing winning team
                 if status == 'Final' and home_score is not None and away_score is not None and not winning_team:
                     winning_team = target_game.get('home_name') if home_score > away_score else target_game.get('away_name')
 
@@ -194,6 +203,7 @@ def get_game_details(team, target_date):
             'home_score': home_score,
             'away_score': away_score,
             'winning_team': winning_team,
+            'next_game_date': target_game.get('next_game_date')
         }
 
     except Exception as e:
@@ -215,6 +225,7 @@ def build_webhook_payload(game_info):
         home_score = game_info.get('home_score')
         away_score = game_info.get('away_score')
         winning_team = game_info.get('winning_team')
+        next_game_date = game_info.get('next_game_date')
 
         # check if home team won
         home_win = winning_team == home_team
@@ -230,6 +241,18 @@ def build_webhook_payload(game_info):
             'name': "Final Score",
             'value': f"**{home_team}** {home_score} - {away_score} **{away_team}**\nWinner: **{winning_team}**\n_ _"
         }
+        
+        next_game_field = None
+        if next_game_date:
+            next_game_field = {
+                'name': "Next Game?",
+                'value': f"Next home game is on **{next_game_date}**\n_ _"
+            }
+        else:
+            next_game_field = {
+                'name': "Next Game?",
+                'value': "No more home games found in this season.\n_ _"
+            }
         #promo_field = {
         #    'name': "What is the promo?",
         #    'value': "This is a [collab](https://www.pandaexpress.com/promo/dodgerswin) between Panda Express and the LA Dodgers, get the Panda Express mobile app to use the promo code\nIf you want to join in on the big backtivites get someone to give you the role for ping\n_ _"
@@ -250,6 +273,7 @@ def build_webhook_payload(game_info):
                         'color': embed_color,
                         'fields': [
                             score_field,
+                            next_game_field,
                             #promo_field,
                             #website_field
                         ]
@@ -266,6 +290,7 @@ def build_webhook_payload(game_info):
                         'color': embed_color,
                         'fields': [
                             score_field,
+                            next_game_field,
                             #website_field
                         ]
                     }
