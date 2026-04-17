@@ -346,7 +346,9 @@ async def send_webhook():
 async def main(test_date=None):
     try:
         logger.info("Daily Dodgers game check process starting...")
-        target_date = test_date if test_date else (datetime.now(timezone('US/Pacific')) - timedelta(days=1)).strftime("%Y-%m-%d")
+        now_dt = datetime.now(timezone('US/Pacific'))
+        target_date = test_date if test_date else (now_dt - timedelta(days=1)).strftime("%Y-%m-%d")
+        logger.info(f"Today is {now_dt}... Target date is {target_date}..."
         build_webhook_payload(get_game_details(DODGERS_TEAM, target_date))
         await send_webhook()
     except Exception as e:
